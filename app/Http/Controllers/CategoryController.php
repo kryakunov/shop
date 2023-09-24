@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\DTO\CategoryForm;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -27,27 +29,25 @@ class CategoryController extends Controller
         return view('categories.create', ['categories' => $categories]);
     }
 
-    public function createTree($categories)
-    {
-        $parentsArr = [];
-        foreach($categories as $key => $item){
-            if (isset($item['parent_id']))
-                $parentsArr[$item['parent_id']][$item['id']] = $item;
-            else
-                $parentsArr[$item['id']] = $item;
-        }
+    // public function createTree($categories)
+    // {
+    //     $parentsArr = [];
+    //     foreach($categories as $key => $item){
+    //         if (isset($item['parent_id']))
+    //             $parentsArr[$item['parent_id']][$item['id']] = $item;
+    //         else
+    //             $parentsArr[$item['id']] = $item;
+    //     }
 
-        return $parentsArr;
-    }
+    //     return $parentsArr;
+    // }
 
     /** 
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $this->validate($request, [
-            'title' =>'required',
-        ]);
+        $data = new CategoryForm($request->validated());
 
         $category = Category::add($request->all());
 

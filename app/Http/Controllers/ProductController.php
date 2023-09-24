@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\DTO\ProductForm;
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller
 {
@@ -87,16 +88,12 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProductRequest $request, $id)
     {
-        $this->validate($request, [
-            'title' =>'required',
-            'price'   =>  'required',
-            'image' =>  'nullable'
-        ]);
+        $data = new ProductForm($request->validated());
 
         $product = Product::find($id);
-        $product->edit($request->all());
+        $product->edit($data->all());
         $product->uploadImage($request->file('image'));
 
         return redirect()->route('admin.index');

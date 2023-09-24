@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('price');
             $table->integer('category_id')->nullable();
-            $table->boolean('in_stock')->default(false);
+            $table->boolean('in_stock')->nullable();
             $table->timestamps();
         });
     }
