@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\DTO\ProductForm;
+use App\Http\Requests\StoreProductRequest;
 
 class ProductController extends Controller
 {
@@ -41,15 +43,12 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $this->validate($request, [
-            'title' =>'required',
-            'price'   =>  'required|integer',
-            'image' =>  'nullable|image'
-        ]);
 
-        $product = Product::add($request->all());
+        $data = new ProductForm($request->validated());
+
+        $product = Product::add($data->all());
 
         $product->uploadImage($request->file('image'));
 

@@ -22,10 +22,25 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
+        //$categories = $this->createTree($categories);
+
         return view('categories.create', ['categories' => $categories]);
     }
 
-    /**
+    public function createTree($categories)
+    {
+        $parentsArr = [];
+        foreach($categories as $key => $item){
+            if (isset($item['parent_id']))
+                $parentsArr[$item['parent_id']][$item['id']] = $item;
+            else
+                $parentsArr[$item['id']] = $item;
+        }
+
+        return $parentsArr;
+    }
+
+    /** 
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
